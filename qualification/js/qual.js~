@@ -1,0 +1,173 @@
+(function($){
+    window.qualControl = function () {
+	var base = {};
+	
+	base.passedQual = false;
+	
+	base.init = function () {
+	    if (!isChrome()) {
+		base.showChrome();
+		} else if (workerID == "") {
+		base.showPreview();
+	    } else {
+		$('#toc1').click(function(){
+		    $('.qual.container').hide();
+		    $('#install').show();
+		    $("html, body").animate({ scrollTop: 0 }, "slow");
+		    return false;
+		});
+		$('#toc2').click(function(){
+		    $('.qual.container').hide();
+		    $('#use').show();
+		    $("html, body").animate({ scrollTop: 0 }, "slow");
+		    return false;
+		});
+		$('#toc3').click(function(){
+		    $('.qual.container').hide();
+		    $('#test').show();
+		    $("html, body").animate({ scrollTop: 0 }, "slow");
+		    return false;
+		});
+		//$('theForm').submit(function() {
+		$('#submitHIT').click(function(event){
+		    submitXPath($('#formValue').val());
+		    event.preventDefault();
+		});
+		$('#submitComment').click(function(){
+		    addComment();
+		});
+		$('#qualLink').click(function(){
+			base.displayQualification();
+			return false;
+		});
+		base.loadHIT();
+		base.checkQualification();
+	    }
+	};
+
+	base.loadHIT = function () {
+	    var tables = ['tables/presidents.html', 'tables/birthstone.html', 'tables/class.html', 'tables/language.html'];
+	    var selection = tables[Math.floor(Math.random()*tables.length)];
+	    base.selection = selection;
+	    $('#hitLink').attr("href", selection).text(selection)
+	    .click(function () {
+		    window.open(selection, "HITtable");
+		    return false;
+		});
+	};
+	
+	base.checkQualification = function() {
+	    var settings = {};
+	    settings.url = "isQualified.jsp";
+	    settings.type = "POST";
+	    settings.data = {
+		worker: workerID
+	    };
+	    settings.success = function (value) {
+		if (value == 0) {
+		    base.displayQualification();
+		} else {
+		    base.passedQual = true;
+		    base.skipQualification();
+		}
+	    };
+	    $.ajax(settings);
+	};
+
+	base.hideAll = function () {
+	    $('div.content').hide();
+	};
+	
+	base.displayQualification = function () {
+	    base.hideAll();
+	    $('.qual.container').hide();
+	    $('#mainContent').show();
+	    $('#install').show();
+	};
+	
+	base.skipQualification = function () {
+	    base.hideAll();
+	    $('#HIT').show();
+	};
+	
+	base.showChrome = function () {
+	    base.hideAll();
+	    $('#google').show();
+	};
+
+        base.showPreview = function () {
+	    base.hideAll();
+	    $('#preview').show();
+	    $('#submitHIT')
+	    .attr('disabled', '')
+	    .attr('value', 'Accept the HIT first');
+	};
+	
+	base.validate = function () {
+	    var settings = {};
+	    settings.url = "addQual.jsp";
+	    settings.type = "POST";
+	    var entry = $('#testVal').val().trim();
+	    var pass = 0;
+	    if (entry == '//table[2]/tbody/tr[td]') {
+		$('#mainContent').hide();
+		$('.hit').show();
+		pass = 1;
+		base.passedQual = true;
+	    } else {
+		$('#testError').text("wrong value");
+	    }
+	    settings.data = {
+		'worker': workerID,
+		'entry': entry,
+		'pass': pass
+	    };
+	    $.ajax(settings);
+	};
+	
+	var isChrome = function () {
+	    ua = navigator.userAgent;
+	    return ua && ua.indexOf("Chrome") != -1;
+	};
+	
+	var addComment = function () {
+	    var settings = {};
+            var comment = $('#commentBox').val();
+	    settings.url = "addComment.jsp";
+	    settings.type = "POST";
+	    settings.data = {
+		'worker': workerID,
+		'comment': comment
+	    };
+	    $.ajax(settings);
+	    $('#commentAlert').text('Comment Submitted');
+	};
+	
+	var submitXPath = function (xpath) {
+	    var settings = {};
+	    siteName = base.selection;
+	    settings.url = "addXPath.jsp";
+	    settings.type = "POST";
+	    settings.success = function () {
+		$('#theForm').submit();
+	    };
+	    settings.error = function () {
+		$('commentAlert').text('Submission failed; please try again.');
+	    }
+	    settings.data = {
+		'worker': workerID,
+		'site': siteName,
+		'xpath': xpath,
+	    };
+	    $.ajax(settings);
+	    return true;
+	};
+	
+	return base;
+    }();
+})(jQuery);
+
+$(document).ready(function () {
+	var qc = window.qualControl;
+	qc.init();
+});

@@ -1,0 +1,12 @@
+<html>
+  <head>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="jquery-ui.js"></script>
+    <script type="text/javascript" src="jquery-tmpl.js"></script>
+    <script type="text/javascript" src="classData.js"></script>
+    <script type="text/javascript" src="createTable.js"></script>
+  </head>
+  <body>
+    <table id="dataTable"></table>
+  </body>
+</html>

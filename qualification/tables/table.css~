@@ -1,0 +1,75 @@
+table {
+    border-width: 1px;
+    border-spacing: 2px;
+    border-style: outset;
+    border-color: gray;
+    border-collapse: separate;
+    background-color: white;
+    margin-right: auto;
+    margin-left: auto;
+}
+table th {
+    border-width: 1px;
+    padding: 1px;
+    border-style: inset;
+    border-color: gray;
+    background-color: white;
+}
+table td {
+    border-width: 1px;
+    padding: 1px;
+    border-style: inset;
+    border-color: gray;
+    background-color: white;
+}
+body {
+    text-align: center;
+}
+.wrapper {
+    text-align: center;
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+p, #months {
+    margin-bottom: 16px;
+    margin-top: 0px;
+}
+img {
+    padding: 5px;
+    border: 1px solid black;
+    margin-bottom: 16px;
+}
+#install1,
+#install2
+{
+    width: 525;
+    height: 330;
+}
+#use1
+{
+    width: 240;
+    height: 350;
+}
+#use2 
+{
+    width: 460;
+    height: 350;
+}
+#use3
+{
+    width: 740;
+    height: 520;
+}
+.toggleButton {
+    color: #888888;
+    cursor: pointer;
+}
+.container {
+    border: 1px solid black;
+    margin: 5px 0px;
+}
+.error 
+{
+    color: Red;
+}

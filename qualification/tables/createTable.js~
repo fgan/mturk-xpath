@@ -1,0 +1,9 @@
+$(document).ready(function() {
+	var markup = "<tr>";
+	for (key in data[0]) {
+	    markup += "<td>${" + key + "}</td>";
+	}
+	markup += "</tr>";
+	$.template('dataTemplate', markup);
+	$.tmpl('dataTemplate', data).appendTo('#dataTable');
+});
