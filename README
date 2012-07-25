@@ -1,0 +1,31 @@
+Quick run:
+Everything is already set up in the server ec2-50-18-19-3.us-west-1.compute.amazonaws.com. To quickly register a HIT, log in as ubuntu and go to the directory $MTURK_SDK_HOME (~/install/mturk). The sample test tables given by the HIT are stored in the qualifications/tables/ directory. To change the pricing of a HIT, go to $MTURK_SDK_HOME/samples/qual/ and put the dollar amount for your HIT at the bottom, in the call "new MTurkTester(${amount})".
+
+Front and back end of the HIT:
+The HIT is handled through a set of JSP files and javascript. The pages are served up with a Tomcat server, with a java plugin.
+    qualification.jsp - the main page, contains the html and some logic for submitting the HIT once the turker clicks submit.
+    addComment.jsp - handles the AJAX call for comments.
+    isQualified.jsp - handles the AJAX call to check if a turker already has earned the qualification.
+    addQual.jsp - stores the result of the qualification test of turkers.
+    addXPath.jsp - stores the result of the turker's submission.
+    js/qual.js - contains the main logic that determines what a turker sees.
+        - checks if a turker is using a browser other than Chrome, and displays an error if so.
+        - checks if a turker has the qualification or not. If a turker has the qualification, he goes directly to the HIT question.
+        - controls which part of the qualification test is being shown; the qualification test is done in three parts.
+        - interfaces with the database through the .jsp files and AJAX.
+        - chooses which website is used for the test from a list of pre-populated sites. These are currently only pages stored in the tables/ directory, but can be anything.
+    tables/ - directory that contains the current sample tests for turkers.
+
+Database:
+Data is stored in a mySQL database, in three tables. To quickly access from the server, you can type in the alias "editDB" to start mySQL, then "use testDB;".
+    The QualComments contains all the comments that turkers have made.
+    The Qualifications table contains all qualification attempts made by turkers, along with a timestamp and the answer they gave for the qualification.
+    The XPaths table contains all answers to the HIT, as well as the site that the answer was for.
+AJAX calls made from the HIT interface with the database through stored procedures.
+
+Mechanical Turk interface:
+Interfacing with Mechanical Turk is done through the files in the /mturk directory. It is coded in Java, built with ant, and uses the Mechanical Turk Java SDK.
+    Creating a HIT is pretty much automated. To create a qualification, go to the mechanical turk directory and run "ant qual". This looks for the "qual" target in build.xml and executes it.
+    To edit the Requester information, set the access_key and secret_key parameters in samples/mturk.properties.
+    To change from posting HITs in the sandbox versus to users, change the service_url parameter in samples/mturk.properties.
+    You can run multiple tests at the same time by copying samples/qual into samples/${new_test_name} and adding the appropriate target in build.xml.
